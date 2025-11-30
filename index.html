@@ -3,66 +3,188 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Manas mājas</title>
-    <link rel="stylesheet" href="C:\Users\A230441KV\Desktop\proj\src\css\style.css">
+    <title>BlogHub - Raksti ar Sirdi</title>
+    <link rel="stylesheet" href="C:\Users\klavs\Desktop\Skola\BlogHub\BlogHub\src\css\style.css">
 </head>
 <body>
     <header>
-        <h1>Manas mājas</h1>
-        <nav>
-            <a href="#">Home</a>
-            <a href="#">Produkti</a>
-            <a href="#">About</a>
-            <a href="#">Contact</a>
+        <div class="header-wrap">
+            <div class="logo">BlogHub</div>
+            <nav class="nav-desktop">
+                <a href="#home">Sākums</a>
+                <a href="#posts">Raksti</a>
+                <div class="dropdown">
+                    <a href="#services" class="dropbtn">Pakalpojumi</a>
+                    <div class="dropdown-content">
+                        <a href="#design">Dizaina Pakalpojumi</a>
+                        <a href="#seo">SEO Optimizācija</a>
+                        <a href="#content">Satura Izveide</a>
+                        <a href="#consulting">Konsultācijas</a>
+                    </div>
+                </div>
+                <a href="#contact">Kontakti</a>
+                <button class="theme-toggle" onclick="toggleTheme()">Tumšais</button>
+            </nav>
+            <button class="hamburger" onclick="toggleMobile()">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+        <nav class="nav-mobile" id="mobileNav">
+            <a href="#home" onclick="closeMobile()">Sākums</a>
+            <a href="#posts" onclick="closeMobile()">Raksti</a>
+            <div class="mobile-dropdown">
+                <a href="#services" onclick="toggleMobileDropdown()">Pakalpojumi ▼</a>
+                <div class="mobile-dropdown-content" id="mobileDropdown">
+                    <a href="#design" onclick="closeMobile()">Dizaina Pakalpojumi</a>
+                    <a href="#seo" onclick="closeMobile()">SEO Optimizācija</a>
+                    <a href="#content" onclick="closeMobile()">Satura Izveide</a>
+                    <a href="#consulting" onclick="closeMobile()">Konsultācijas</a>
+                </div>
+            </div>
+            <a href="#contact" onclick="closeMobile()">Kontakti</a>
         </nav>
     </header>
 
-    <main>
-        <article>
-            <h2>Laipni lūgti!</h2>
-            <p>šajā mājaslapā atradīsiet visu saistītu ar Jūsu mājām nepieciešamo</p>
-            <img src="https://vi" alt="placehold">
+    <div class="container">
+        <section class="hero" id="home">
+            <h1>Tavs Digitālais Dienasgrāmatas</h1>
+            <p>Vieta, kur idejas pārvēršas vārdos. Dalies ar saviem stāstiem, iedvesmojies no citiem un izveido savu unikālo balsi. Sāc rakstīt un atklāj jaunu lasītāju pasauli.</p>
+        </section>
 
-            <h2>Mūsu produkti</h2>
-            <div class="card-container">
-                <div class="card">
-                    <img src="C:\Users\A230441KV\Desktop\proj\src\img\lejupielāde.jfif" alt="Produkts 1">
-                    <h2>Produkts 1</h2>
-                    <p>Labi dažādu veidu tīrītāji. Lieliskas izvēle ikvienam!</p>
-                    <button>Pirkt</button>
+        <div class="search-bar">
+            <input type="text" placeholder="Meklēt rakstus pēc nosaukuma vai apraksta..." id="searchBox" onkeyup="filterPosts()">
+        </div>
+
+        <main class="posts" id="posts">
+            <article class="post-card" data-title="Kā izveidot personīgu blogu 2025. gadā" data-desc="Praktisks ceļvedis visiem, kas vēlas sākt rakstīt un veidot savu tiešsaistes klātbūtni. Ietver tehniskos un satura aspektus.">
+                <img src="img/blog1.jpg" alt="Blogging ceļvedis" class="post-img">
+                <div class="post-body">
+                    <div class="post-meta">
+                        <span class="post-tag">Ceļvedis</span>
+                        <span class="post-date">5. dec 2025</span>
+                    </div>
+                    <h2 class="post-title">Kā izveidot personīgu blogu 2025. gadā</h2>
+                    <p class="post-excerpt">Praktisks ceļvedis visiem, kas vēlas sākt rakstīt un veidot savu tiešsaistes klātbūtni. Ietver tehniskos un satura aspektus.</p>
+                    <a href="#" class="read-more" onclick="showModal('Kā izveidot personīgu blogu 2025. gadā', 'Sāc ar platformas izvēli - WordPress, Medium vai Ghost. Pēc tam izveido savu unikālo dizainu, kas atspoguļo tavu personību. Raksti regulāri, vismaz reizi nedēļā. Izmanto sociālos medijus, lai piesaistītu auditoriju. Neanalizē statistiku pārāk bieži - koncentrējies uz kvalitāti.'); return false;">Lasīt tālāk →</a>
                 </div>
-                <div class="card">
-                    <img src="C:\Users\A230441KV\Desktop\proj\src\img\lejupielāde.jfif" alt="Produkts 2">
-                    <h2>Produkts 2</h2>
-                    <p>Apraksts par produktu. Kvalitāte un dizains vienā.</p>
-                    <button>Pirkt</button>
+            </article>
+
+            <article class="post-card" data-title="Rakstīšanas ieradumu veidošana" data-desc="Kā attīstīt konsekventu rakstīšanas praksi, kas palīdz sasniegt mērķus un saglabāt motivāciju ilgtermiņā.">
+                <img src="img/blog2.jpg" alt="Rakstīšanas ieradumi" class="post-img">
+                <div class="post-body">
+                    <div class="post-meta">
+                        <span class="post-tag">Produktivitāte</span>
+                        <span class="post-date">2. dec 2025</span>
+                    </div>
+                    <h2 class="post-title">Rakstīšanas ieradumu veidošana</h2>
+                    <p class="post-excerpt">Kā attīstīt konsekventu rakstīšanas praksi, kas palīdz sasniegt mērķus un saglabāt motivāciju ilgtermiņā.</p>
+                    <a href="#" class="read-more" onclick="showModal('Rakstīšanas ieradumu veidošana', 'Noteic konkrētu laiku dienā rakstīšanai. Sāc ar maziem mērķiem - 200 vārdi dienā. Izveido patīkamu darba vidi. Izslēdz visus traucēkļus. Izmanto Pomodoro tehniku. Apbalvo sevi pēc mērķu sasniegšanas. Neatstāj iespēju atlikt - raksti katru dienu.'); return false;">Lasīt tālāk →</a>
                 </div>
-                <div class="card">
-                    <img src="C:\Users\A230441KV\Desktop\proj\src\img\lejupielāde.jfif" alt="Produkts 3">
-                    <h2>Produkts 3</h2>
-                    <p>Apraksts par produktu. Praktiska un moderna izvēle.</p>
-                    <button>Pirkt</button>
+            </article>
+
+            <article class="post-card" data-title="Autentiskuma nozīme saturā" data-desc="Kāpēc patiesība un personīgā pieredze ir galvenais, kas pievelk un saglabā lasītājus mūsdienīgā satura pasaulē.">
+                <img src="img/blog3.jpg" alt="Autentisks saturs" class="post-img">
+                <div class="post-body">
+                    <div class="post-meta">
+                        <span class="post-tag">Domāšana</span>
+                        <span class="post-date">28. nov 2025</span>
+                    </div>
+                    <h2 class="post-title">Autentiskuma nozīme saturā</h2>
+                    <p class="post-excerpt">Kāpēc patiesība un personīgā pieredze ir galvenais, kas pievelk un saglabā lasītājus mūsdienīgā satura pasaulē.</p>
+                    <a href="#" class="read-more" onclick="showModal('Autentiskuma nozīme saturā', 'Cilvēki jūt neīstumu. Raksti par to, ko patiešām zini un esi piedzīvojis. Nedari sevi labāku, nekā esi. Dalies gan ar panākumiem, gan neveiksmēm. Tava balss ir unikāla tieši tādēļ, ka tā ir tava. Nebaidies būt neaizsargāts - tieši tas veido saikni.'); return false;">Lasīt tālāk →</a>
+                </div>
+            </article>
+        </main>
+
+        <aside class="sidebar">
+            <div class="widget">
+                <h3>Populārākie</h3>
+                <ul>
+                    <li><a href="#">Minimālisma filozofija rakstīšanā</a></li>
+                    <li><a href="#">Kā atrast savu unikālo stilu</a></li>
+                    <li><a href="#">Digitālā detoksikācija radošajiem</a></li>
+                    <li><a href="#">Ieņēmumu gūšana no bloga</a></li>
+                </ul>
+            </div>
+
+            <div class="widget newsletter">
+                <h3>Saņem Jaunumus</h3>
+                <p>Iknedēļas padomi un iedvesma tieši e-pastā.</p>
+                <input type="email" placeholder="tavs@epasts.lv">
+                <button onclick="subscribeNewsletter()">Pierakstīties</button>
+            </div>
+
+            <div class="widget stats">
+                <h3>Kopiena</h3>
+                <div class="stat-box">
+                    <div class="stat-num">8,234</div>
+                    <div class="stat-label">Aktīvi Autori</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-num">34,567</div>
+                    <div class="stat-label">Publicēti Raksti</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-num">1.2M+</div>
+                    <div class="stat-label">Mēneša Lasītāji</div>
                 </div>
             </div>
-        </article>
-
-        <aside>
-            <h3>Saistītie raksti</h3>
-            <ul>
-                <li><a href="#">Raksts 1</a></li>
-                <li><a href="#">Raksts 2</a></li>
-                <li><a href="#">Raksts 3</a></li>
-            </ul>
         </aside>
-    </main>
+
+        <section class="contact" id="contact">
+            <h2>Sazinies ar Mums</h2>
+            <form class="form-grid" onsubmit="handleSubmit(event)">
+                <div class="form-field">
+                    <label for="userName">Vārds</label>
+                    <input type="text" id="userName">
+                    <span class="error-msg">Lūdzu, ievadi vārdu</span>
+                </div>
+                <div class="form-field">
+                    <label for="userEmail">E-pasts</label>
+                    <input type="email" id="userEmail">
+                    <span class="error-msg">Lūdzu, ievadi derīgu e-pastu</span>
+                </div>
+                <div class="form-field">
+                    <label for="userMsg">Ziņojums</label>
+                    <textarea id="userMsg" rows="5"></textarea>
+                    <span class="error-msg">Ziņojumam jābūt vismaz 10 simboliem</span>
+                </div>
+                <button type="submit" class="submit-btn">Nosūtīt</button>
+                <div class="success-alert" id="successAlert">Paldies! Drīzumā sazināsimies.</div>
+            </form>
+        </section>
+    </div>
 
     <footer>
-        <p>&copy; 2025 Mans mājas</p>
-        <p>Seko man: 
-            <a href="#">Facebook</a> | 
-            <a href="#">Twitter</a> | 
-            <a href="#">Instagram</a>
-        </p>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>Par BlogHub</h4>
+                <p>Platforma autoriem, kas vēlas dalīties ar saviem stāstiem un veidot savienojumus ar līdzīgi domājošiem.</p>
+            </div>
+            <div class="footer-section">
+                <h4>Seko</h4>
+                <div class="social">
+                    <a href="#">Facebook</a>
+                    <a href="#">Twitter</a>
+                    <a href="#">Instagram</a>
+                </div>
+            </div>
+            <div class="footer-section">
+                <p>© 2025 BlogHub. Visas tiesības aizsargātas.</p>
+            </div>
+        </div>
     </footer>
+
+    <div class="modal" id="modal" onclick="if(event.target === this) closeModal()">
+        <div class="modal-box">
+            <button class="modal-close" onclick="closeModal()">×</button>
+            <h2 id="modalTitle"></h2>
+            <p id="modalText"></p>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
 </body>
 </html>
