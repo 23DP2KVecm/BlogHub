@@ -19,6 +19,16 @@ declare module 'vue-router/auto-routes' {
    */
   export interface RouteNamedMap {
     '/': RouteRecordInfo<'/', '/', Record<never, never>, Record<never, never>>,
+    '/admin/': RouteRecordInfo<'/admin/', '/admin', Record<never, never>, Record<never, never>>,
+    '/dashboard/': RouteRecordInfo<'/dashboard/', '/dashboard', Record<never, never>, Record<never, never>>,
+    '/dashboard/raksti/[id]/rediget': RouteRecordInfo<'/dashboard/raksti/[id]/rediget', '/dashboard/raksti/:id/rediget', { id: ParamValue<true> }, { id: ParamValue<false> }>,
+    '/dashboard/raksti/izveidot': RouteRecordInfo<'/dashboard/raksti/izveidot', '/dashboard/raksti/izveidot', Record<never, never>, Record<never, never>>,
+    '/kategorijas': RouteRecordInfo<'/kategorijas', '/kategorijas', Record<never, never>, Record<never, never>>,
+    '/login': RouteRecordInfo<'/login', '/login', Record<never, never>, Record<never, never>>,
+    '/raksti/': RouteRecordInfo<'/raksti/', '/raksti', Record<never, never>, Record<never, never>>,
+    '/raksti/[slug]': RouteRecordInfo<'/raksti/[slug]', '/raksti/:slug', { slug: ParamValue<true> }, { slug: ParamValue<false> }>,
+    '/register': RouteRecordInfo<'/register', '/register', Record<never, never>, Record<never, never>>,
+    '/statistika': RouteRecordInfo<'/statistika', '/statistika', Record<never, never>, Record<never, never>>,
   }
 
   /**
@@ -34,6 +44,46 @@ declare module 'vue-router/auto-routes' {
   export interface _RouteFileInfoMap {
     'src/pages/index.vue': {
       routes: '/'
+      views: never
+    }
+    'src/pages/admin/index.vue': {
+      routes: '/admin/'
+      views: never
+    }
+    'src/pages/dashboard/index.vue': {
+      routes: '/dashboard/'
+      views: never
+    }
+    'src/pages/dashboard/raksti/[id]/rediget.vue': {
+      routes: '/dashboard/raksti/[id]/rediget'
+      views: never
+    }
+    'src/pages/dashboard/raksti/izveidot.vue': {
+      routes: '/dashboard/raksti/izveidot'
+      views: never
+    }
+    'src/pages/kategorijas.vue': {
+      routes: '/kategorijas'
+      views: never
+    }
+    'src/pages/login.vue': {
+      routes: '/login'
+      views: never
+    }
+    'src/pages/raksti/index.vue': {
+      routes: '/raksti/'
+      views: never
+    }
+    'src/pages/raksti/[slug].vue': {
+      routes: '/raksti/[slug]'
+      views: never
+    }
+    'src/pages/register.vue': {
+      routes: '/register'
+      views: never
+    }
+    'src/pages/statistika.vue': {
+      routes: '/statistika'
       views: never
     }
   }

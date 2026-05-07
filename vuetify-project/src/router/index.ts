@@ -11,6 +11,25 @@ import { routes } from 'vue-router/auto-routes'
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes,
+  scrollBehavior: () => ({ top: 0 }),
+})
+
+router.beforeEach((to) => {
+  let user: { role?: string; token?: string } | null = null
+  try {
+    const stored = localStorage.getItem('bloghub_user')
+    if (stored) user = JSON.parse(stored)
+  } catch {}
+
+  const path = to.path
+
+  if (path.startsWith('/dashboard') && !user?.token) {
+    return { path: '/login', query: { redirect: path } }
+  }
+
+  if (path.startsWith('/admin') && user?.role !== 'administrators') {
+    return user ? { path: '/' } : { path: '/login' }
+  }
 })
 
 // Workaround for https://github.com/vitejs/vite/issues/11804
