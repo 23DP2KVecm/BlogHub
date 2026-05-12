@@ -41,13 +41,13 @@ async function fetchPost() {
   const data = await get<any>(`/dashboard/posts`)
   if (data) {
     const all = data.data ?? data
-    post.value = all.find((p: any) => String(p.id) === String(route.params.id))
+    post.value = all.find((p: any) => String(p.id) === String((route.params as { id: string }).id))
   }
 }
 
 async function handleUpdate(form: Record<string, any>) {
   saveLoading.value = true
-  const data = await put<any>(`/dashboard/posts/${route.params.id}`, form)
+  const data = await put<any>(`/dashboard/posts/${(route.params as { id: string }).id}`, form)
   saveLoading.value = false
   if (data) {
     router.push(`/raksti/${data.slug}`)

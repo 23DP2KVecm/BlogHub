@@ -95,9 +95,9 @@ function initials(name?: string): string {
 }
 
 function avatarColor(name?: string): string {
-  if (!name) return AVATAR_COLORS[0]
+  if (!name) return AVATAR_COLORS[0] as string
   const idx = name.charCodeAt(0) % AVATAR_COLORS.length
-  return AVATAR_COLORS[idx]
+  return AVATAR_COLORS[idx] as string
 }
 </script>
 

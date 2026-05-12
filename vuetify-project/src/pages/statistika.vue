@@ -70,7 +70,7 @@
             >
               <template #prepend>
                 <v-avatar :color="rankColor(i)" size="30" class="mr-3">
-                  <span class="text-caption font-weight-black text-white">{{ i + 1 }}</span>
+                  <span class="text-caption font-weight-black text-white">{{ Number(i) + 1 }}</span>
                 </v-avatar>
               </template>
               <v-list-item-title class="text-body-2 font-weight-medium">
@@ -118,8 +118,8 @@ const summaryCards = computed(() => {
 })
 
 const RANK_COLORS = ['#FFD700', '#C0C0C0', '#CD7F32', '#1565C0', '#2E7D32']
-function rankColor(i: number) {
-  return RANK_COLORS[i] ?? '#9E9E9E'
+function rankColor(i: number | string) {
+  return RANK_COLORS[+i] ?? '#9E9E9E'
 }
 
 async function buildCharts() {

@@ -170,7 +170,7 @@ async function fetchPosts() {
     kartojums: filters.value.kartojums,
   }
   if (filters.value.meklet) params.meklet = filters.value.meklet
-  if (filters.value.kategorijas.length === 1) params.kategorija = filters.value.kategorijas[0]
+  if (filters.value.kategorijas.length === 1) params.kategorija = filters.value.kategorijas[0]!
   if (filters.value.datums_no) params.datums_no = filters.value.datums_no
   if (filters.value.datums_lidz) params.datums_lidz = filters.value.datums_lidz
   if (filters.value.min_skatijumi) params.min_skatijumi = filters.value.min_skatijumi
