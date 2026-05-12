@@ -15,10 +15,6 @@ RUN composer install --no-dev --optimize-autoloader --no-scripts --no-interactio
 RUN mkdir -p storage/framework/{sessions,views,cache,testing} storage/logs bootstrap/cache \
     && chmod -R 777 storage bootstrap/cache
 
-RUN php artisan config:cache \
-    && php artisan route:cache \
-    && php artisan view:cache
-
 EXPOSE ${PORT:-8000}
 
-CMD php artisan migrate --force --seed && php artisan serve --host=0.0.0.0 --port=${PORT:-8000}
+CMD php artisan config:clear && php artisan config:cache && php artisan migrate --force --seed && php artisan serve --host=0.0.0.0 --port=${PORT:-8000}
