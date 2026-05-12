@@ -20,7 +20,7 @@
           </p>
 
           <div class="d-flex justify-center ga-3 flex-wrap">
-            <v-btn color="primary" size="large" rounded="pill" to="/register" elevation="2">
+            <v-btn color="primary" size="large" rounded="pill" :to="writeLink" elevation="2">
               <v-icon start>mdi-rocket-launch</v-icon>
               Sākt rakstīt
             </v-btn>
@@ -184,9 +184,13 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useApi } from '@/composables/useApi'
+import { useAuth } from '@/composables/useAuth'
 import PostCard from '@/components/PostCard.vue'
+
+const { isLoggedIn } = useAuth()
+const writeLink = computed(() => isLoggedIn() ? '/dashboard/raksti/izveidot' : '/register')
 
 const { loading, get } = useApi()
 

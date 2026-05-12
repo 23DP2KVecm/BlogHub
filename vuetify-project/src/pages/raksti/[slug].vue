@@ -147,12 +147,11 @@ import { useApi } from '@/composables/useApi'
 import { useAuth } from '@/composables/useAuth'
 
 const route = useRoute()
-const { loading, get, post } = useApi()
+const { loading, get, post: apiPost } = useApi()
 const { user, isLoggedIn } = useAuth()
 
 const postData = ref<any>(null)
-const post_ = computed(() => postData.value)
-const post = post_
+const post = computed(() => postData.value)
 
 const newComment = ref('')
 const commentForm = ref()
@@ -186,7 +185,7 @@ function formatDate(d?: string) {
 }
 
 async function fetchPost() {
-  const data = await get<any>(`/posts/${route.params.slug}`)
+  const data = await get<any>(`/posts/${(route.params as { slug: string }).slug}`)
   if (data) postData.value = data
 }
 
@@ -194,7 +193,7 @@ async function submitComment() {
   const { valid } = await commentForm.value.validate()
   if (!valid) return
   commentLoading.value = true
-  await post(`/posts/${postData.value.id}/comments`, { saturs: newComment.value })
+  await apiPost(`/posts/${postData.value.id}/comments`, { saturs: newComment.value })
   newComment.value = ''
   commentLoading.value = false
 }
