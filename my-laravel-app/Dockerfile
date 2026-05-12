@@ -2,7 +2,9 @@ FROM dunglas/frankenphp:php8.4-bookworm
 
 WORKDIR /app
 
-RUN install-php-extensions pdo_mysql mbstring bcmath intl opcache
+RUN apt-get update && apt-get install -y git unzip && rm -rf /var/lib/apt/lists/*
+
+RUN install-php-extensions pdo_mysql mbstring bcmath intl opcache zip
 
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
