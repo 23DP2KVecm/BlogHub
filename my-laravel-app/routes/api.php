@@ -8,6 +8,11 @@ use App\Http\Controllers\PostController;
 use App\Http\Controllers\StatsController;
 use Illuminate\Support\Facades\Route;
 
+// OPTIONS preflight
+Route::options('/{any}', function () {
+    return response('', 200);
+})->where('any', '.*');
+
 // ── Publiskie maršruti ────────────────────────────────────────
 Route::get('/posts', [PostController::class, 'index']);
 Route::get('/posts/{raksts:slug}', [PostController::class, 'show']);
