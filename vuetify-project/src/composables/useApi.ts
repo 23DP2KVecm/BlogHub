@@ -1,6 +1,6 @@
 import { ref } from 'vue'
 
-const BASE_URL = '/api'
+const BASE_URL = (import.meta.env.VITE_API_BASE ?? '') + '/api'
 
 function authHeaders(extra: Record<string, string> = {}): Record<string, string> {
   const headers: Record<string, string> = { Accept: 'application/json', ...extra }
