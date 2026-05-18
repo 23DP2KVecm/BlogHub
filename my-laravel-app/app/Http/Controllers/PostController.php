@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Komentars;
 use App\Models\Raksts;
+use App\Models\Reakcija;
+use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -46,14 +49,64 @@ class PostController extends Controller
         return response()->json($query->paginate(6));
     }
 
+    public function storeComment(Request $request, int $id): JsonResponse
+    {
+        $raksts = Raksts::findOrFail($id);
+        $request->validate(['saturs' => 'required|string|min:5|max:1000']);
+
+        $komentars = $raksts->komentari()->create([
+            'user_id'    => auth()->id(),
+            'saturs'     => $request->saturs,
+            'apstiprints' => false,
+        ]);
+
+        return response()->json($komentars->load('user'), 201);
+    }
+
     public function show(Raksts $raksts): JsonResponse
     {
         abort_if($raksts->statuss !== 'publicets', 404);
 
         $raksts->increment('skatijumi');
+        $raksts->load(['user', 'category', 'tags', 'komentari.user']);
 
-        return response()->json(
-            $raksts->load(['user', 'category', 'tags', 'komentari.user'])
-        );
+        $manaReakcija = null;
+        $token = request()->bearerToken();
+        if ($token) {
+            $user = User::where('api_token', $token)->first();
+            if ($user) {
+                $manaReakcija = $raksts->reakcijas()->where('user_id', $user->id)->value('veids');
+            }
+        }
+
+        return response()->json([
+            ...$raksts->toArray(),
+            'patik_count'   => $raksts->reakcijas()->where('veids', 'patik')->count(),
+            'nepatik_count' => $raksts->reakcijas()->where('veids', 'nepatik')->count(),
+            'mana_reakcija' => $manaReakcija,
+        ]);
+    }
+
+    public function storeReakcija(Request $request, int $id): JsonResponse
+    {
+        $request->validate(['veids' => 'required|in:patik,nepatik']);
+
+        $esosa = Reakcija::where('post_id', $id)->where('user_id', auth()->id())->first();
+
+        if ($esosa) {
+            if ($esosa->veids === $request->veids) {
+                $esosa->delete();
+            } else {
+                $esosa->update(['veids' => $request->veids]);
+            }
+        } else {
+            Reakcija::create(['post_id' => $id, 'user_id' => auth()->id(), 'veids' => $request->veids]);
+        }
+
+        return response()->json([
+            'patik_count'   => Reakcija::where('post_id', $id)->where('veids', 'patik')->count(),
+            'nepatik_count' => Reakcija::where('post_id', $id)->where('veids', 'nepatik')->count(),
+            'mana_reakcija' => Reakcija::where('post_id', $id)->where('user_id', auth()->id())->value('veids'),
+        ]);
     }
 }

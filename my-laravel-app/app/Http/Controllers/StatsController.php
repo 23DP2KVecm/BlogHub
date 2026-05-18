@@ -18,7 +18,7 @@ class StatsController extends Controller
             'raksti'    => Raksts::where('statuss', 'publicets')->count(),
             'autori'    => User::count(),
             'komentari' => Komentars::where('apstiprints', true)->count(),
-            'skatijumi' => (int) Raksts::sum('skatijumi'),
+            'skatijumi' => (int) Raksts::where('statuss', 'publicets')->sum('skatijumi'),
         ];
 
         $paKategorijam = Kategorija::withCount([
@@ -28,7 +28,7 @@ class StatsController extends Controller
 
         $paMenešiem = Raksts::where('statuss', 'publicets')
             ->where('publicets_datums', '>=', now()->subMonths(6))
-            ->select(DB::raw("strftime('%Y-%m', publicets_datums) as menesis"), DB::raw('COUNT(*) as skaits'))
+            ->select(DB::raw("DATE_FORMAT(publicets_datums, '%Y-%m') as menesis"), DB::raw('COUNT(*) as skaits'))
             ->groupBy('menesis')
             ->orderBy('menesis')
             ->get();

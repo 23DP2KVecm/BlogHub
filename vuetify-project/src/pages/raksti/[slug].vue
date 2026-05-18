@@ -76,6 +76,37 @@
       <!-- Content -->
       <div class="post-content text-body-1 mb-12" v-html="post.saturs" />
 
+      <v-divider class="mb-6" />
+
+      <!-- Reactions -->
+      <div class="d-flex align-center ga-3 mb-8">
+        <v-btn
+          :color="manaReakcija === 'patik' ? 'success' : undefined"
+          :variant="manaReakcija === 'patik' ? 'flat' : 'outlined'"
+          rounded="pill"
+          :disabled="!isLoggedIn()"
+          :loading="reakcijaLoading"
+          @click="sendReakcija('patik')"
+        >
+          <v-icon start>mdi-thumb-up</v-icon>
+          Patīk <span class="ml-1 text-caption">({{ patikCount }})</span>
+        </v-btn>
+        <v-btn
+          :color="manaReakcija === 'nepatik' ? 'error' : undefined"
+          :variant="manaReakcija === 'nepatik' ? 'flat' : 'outlined'"
+          rounded="pill"
+          :disabled="!isLoggedIn()"
+          :loading="reakcijaLoading"
+          @click="sendReakcija('nepatik')"
+        >
+          <v-icon start>mdi-thumb-down</v-icon>
+          Nepatīk <span class="ml-1 text-caption">({{ nepatikCount }})</span>
+        </v-btn>
+        <span v-if="!isLoggedIn()" class="text-caption text-medium-emphasis">
+          <router-link to="/login" class="text-primary">Pieslēdzies</router-link>, lai balsotu
+        </span>
+      </div>
+
       <v-divider class="mb-8" />
 
       <!-- Comments -->
@@ -109,6 +140,9 @@
           <h3 class="text-subtitle-1 font-weight-bold mb-3">Pievienot komentāru</h3>
           <v-alert type="info" variant="tonal" rounded="lg" class="mb-3" density="compact">
             Komentāri tiek publicēti pēc moderatora apstiprināšanas.
+          </v-alert>
+          <v-alert v-if="commentSent" type="success" variant="tonal" rounded="lg" class="mb-3" density="compact">
+            Komentārs nosūtīts un gaida moderatora apstiprinājumu.
           </v-alert>
           <v-form ref="commentForm" @submit.prevent="submitComment">
             <v-textarea
@@ -156,6 +190,12 @@ const post = computed(() => postData.value)
 const newComment = ref('')
 const commentForm = ref()
 const commentLoading = ref(false)
+const commentSent = ref(false)
+
+const patikCount = ref(0)
+const nepatikCount = ref(0)
+const manaReakcija = ref<string | null>(null)
+const reakcijaLoading = ref(false)
 
 const approvedComments = computed(
   () => postData.value?.komentari?.filter((c: any) => c.apstiprints) ?? []
@@ -186,16 +226,36 @@ function formatDate(d?: string) {
 
 async function fetchPost() {
   const data = await get<any>(`/posts/${(route.params as { slug: string }).slug}`)
-  if (data) postData.value = data
+  if (data) {
+    postData.value = data
+    patikCount.value = data.patik_count ?? 0
+    nepatikCount.value = data.nepatik_count ?? 0
+    manaReakcija.value = data.mana_reakcija ?? null
+  }
+}
+
+async function sendReakcija(veids: 'patik' | 'nepatik') {
+  reakcijaLoading.value = true
+  const result = await apiPost<any>(`/posts/${postData.value.id}/reakcija`, { veids })
+  reakcijaLoading.value = false
+  if (result) {
+    patikCount.value = result.patik_count
+    nepatikCount.value = result.nepatik_count
+    manaReakcija.value = result.mana_reakcija
+  }
 }
 
 async function submitComment() {
   const { valid } = await commentForm.value.validate()
   if (!valid) return
   commentLoading.value = true
-  await apiPost(`/posts/${postData.value.id}/comments`, { saturs: newComment.value })
-  newComment.value = ''
+  const result = await apiPost(`/posts/${postData.value.id}/comments`, { saturs: newComment.value })
   commentLoading.value = false
+  if (result) {
+    newComment.value = ''
+    commentForm.value.resetValidation()
+    commentSent.value = true
+  }
 }
 
 onMounted(fetchPost)

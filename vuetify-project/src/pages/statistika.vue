@@ -41,20 +41,8 @@
         </v-card>
       </v-col>
 
-      <!-- Doughnut: reactions -->
-      <v-col cols="12" md="4">
-        <v-card rounded="xl" class="pa-5">
-          <h2 class="text-subtitle-1 font-weight-bold mb-1">
-            <v-icon start size="18" color="secondary">mdi-chart-donut</v-icon>
-            Reakcijas
-          </h2>
-          <p class="text-caption text-medium-emphasis mb-4">Patīk vs Nepatīk</p>
-          <canvas ref="donutCanvas" height="260" />
-        </v-card>
-      </v-col>
-
       <!-- Top 5 popular posts -->
-      <v-col cols="12" md="8">
+      <v-col cols="12" md="12">
         <v-card rounded="xl" class="pa-5">
           <h2 class="text-subtitle-1 font-weight-bold mb-4">
             <v-icon start size="18" color="warning">mdi-fire</v-icon>
@@ -99,7 +87,6 @@ const { get } = useApi()
 const stats = ref<any>(null)
 const barCanvas = ref<HTMLCanvasElement | null>(null)
 const lineCanvas = ref<HTMLCanvasElement | null>(null)
-const donutCanvas = ref<HTMLCanvasElement | null>(null)
 
 const summaryCards = computed(() => {
   const k = stats.value?.kopsavilkums
@@ -133,7 +120,6 @@ async function buildCharts() {
 
   const kat = stats.value?.paKategorijam ?? []
   const men = stats.value?.paMenešiem ?? []
-  const rea = stats.value?.reakcijas ?? { patik: 0, nepatik: 0 }
 
   if (barCanvas.value) {
     new Chart(barCanvas.value, {
@@ -178,25 +164,6 @@ async function buildCharts() {
     })
   }
 
-  if (donutCanvas.value) {
-    new Chart(donutCanvas.value, {
-      type: 'doughnut',
-      data: {
-        labels: ['Patīk', 'Nepatīk'],
-        datasets: [{
-          data: [rea.patik, rea.nepatik],
-          backgroundColor: ['#388E3C', '#D32F2F'],
-          hoverOffset: 10,
-        }],
-      },
-      options: {
-        responsive: true,
-        plugins: {
-          legend: { position: 'bottom' },
-        },
-      },
-    })
-  }
 }
 
 onMounted(async () => {

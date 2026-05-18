@@ -23,6 +23,8 @@ Route::post('/auth/login', [AuthController::class, 'login']);
 Route::middleware('auth.token')->group(function () {
     Route::post('/auth/logout', [AuthController::class, 'logout']);
     Route::get('/auth/me', [AuthController::class, 'me']);
+    Route::post('/posts/{id}/comments', [PostController::class, 'storeComment']);
+    Route::post('/posts/{id}/reakcija', [PostController::class, 'storeReakcija']);
 
     Route::get('/dashboard/posts', [DashboardController::class, 'index']);
     Route::post('/dashboard/posts', [DashboardController::class, 'store']);

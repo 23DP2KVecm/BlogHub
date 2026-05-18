@@ -115,25 +115,39 @@
 
     <v-progress-linear v-if="loading" indeterminate color="primary" rounded class="mb-6" />
 
-    <v-row v-if="posts.length">
-      <v-col v-for="post in posts" :key="post.id" cols="12" sm="6" lg="4">
-        <PostCard :post="post" />
-      </v-col>
-    </v-row>
-
-    <div v-else-if="!loading" class="text-center py-16">
-      <v-icon size="72" color="medium-emphasis" class="mb-4">mdi-file-search-outline</v-icon>
-      <p class="text-h6 text-medium-emphasis mb-2">Nav atrasts neviens raksts</p>
-      <p class="text-body-2 text-disabled">Mēģini mainīt meklēšanas kritērijus</p>
+    <div style="position: relative; overflow: hidden; min-height: 400px;">
+      <Transition :name="slideDir">
+        <v-row v-if="posts.length" :key="page">
+          <v-col v-for="post in posts" :key="post.id" cols="12" sm="6" lg="4">
+            <PostCard :post="post" />
+          </v-col>
+        </v-row>
+        <div v-else-if="!loading" class="text-center py-16">
+          <v-icon size="72" color="medium-emphasis" class="mb-4">mdi-file-search-outline</v-icon>
+          <p class="text-h6 text-medium-emphasis mb-2">Nav atrasts neviens raksts</p>
+          <p class="text-body-2 text-disabled">Mēģini mainīt meklēšanas kritērijus</p>
+        </div>
+      </Transition>
     </div>
 
-    <div class="d-flex justify-center mt-10" v-if="totalPages > 1">
-      <v-pagination
-        v-model="page"
-        :length="totalPages"
-        rounded="circle"
-        @update:model-value="fetchPosts"
-      />
+    <div class="d-flex justify-center align-center ga-4 mt-10" v-if="totalPages > 1">
+      <v-btn
+        icon
+        variant="outlined"
+        :disabled="page === 1"
+        @click="slideDir = 'slide-right'; page--; fetchPosts()"
+      >
+        <v-icon>mdi-chevron-left</v-icon>
+      </v-btn>
+      <span class="text-body-2 text-medium-emphasis">{{ page }} / {{ totalPages }}</span>
+      <v-btn
+        icon
+        variant="outlined"
+        :disabled="page === totalPages"
+        @click="slideDir = 'slide-left'; page++; fetchPosts()"
+      >
+        <v-icon>mdi-chevron-right</v-icon>
+      </v-btn>
     </div>
   </v-container>
 
@@ -202,6 +216,8 @@ const totalPages = ref(1)
 const posts = ref<any[]>([])
 const categories = ref<any[]>([])
 const newsletterEmail = ref('')
+
+const slideDir = ref('slide-left')
 
 const sortOptions = [
   { label: 'Jaunākie', value: 'jaunakie' },
@@ -322,7 +338,7 @@ const demoStats = [
 // ── Data fetching ─────────────────────────────────────────────
 async function fetchPosts() {
   const params: Record<string, string | number> = {
-    lapa: page.value,
+    page: page.value,
     kartojums: sortBy.value,
   }
   if (search.value) params.meklet = search.value
@@ -366,21 +382,15 @@ async function fetchCategories() {
 
 async function fetchStats() {
   const data = await get<any>('/stats')
-  if (data) {
+  if (data?.kopsavilkums) {
+    const k = data.kopsavilkums
     stats.value = [
-      { icon: 'mdi-newspaper-variant', value: String(data.raksti ?? 0), label: 'Publicēti raksti' },
-      { icon: 'mdi-account-group', value: String(data.autori ?? 0), label: 'Reģistrēti autori' },
-      {
-        icon: 'mdi-comment-multiple',
-        value: String(data.komentari ?? 0),
-        label: 'Komentāri',
-      },
+      { icon: 'mdi-newspaper-variant', value: String(k.raksti ?? 0), label: 'Publicēti raksti' },
+      { icon: 'mdi-account-group', value: String(k.autori ?? 0), label: 'Reģistrēti autori' },
+      { icon: 'mdi-comment-multiple', value: String(k.komentari ?? 0), label: 'Komentāri' },
       {
         icon: 'mdi-eye',
-        value:
-          data.skatijumi >= 1000
-            ? `${Math.floor(data.skatijumi / 1000)} k`
-            : String(data.skatijumi ?? 0),
+        value: k.skatijumi >= 1000 ? `${(k.skatijumi / 1000).toFixed(1)}k` : String(k.skatijumi ?? 0),
         label: 'Kopējie skatījumi',
       },
     ]
@@ -449,4 +459,17 @@ onMounted(() => {
 .newsletter-subtitle {
   color: rgba(255, 255, 255, 0.8);
 }
+
+.slide-left-enter-active,
+.slide-left-leave-active,
+.slide-right-enter-active,
+.slide-right-leave-active {
+  transition: all 0.35s ease;
+  position: absolute;
+  width: 100%;
+}
+.slide-left-enter-from  { transform: translateX(60px);  opacity: 0; }
+.slide-left-leave-to    { transform: translateX(-60px); opacity: 0; }
+.slide-right-enter-from { transform: translateX(-60px); opacity: 0; }
+.slide-right-leave-to   { transform: translateX(60px);  opacity: 0; }
 </style>
