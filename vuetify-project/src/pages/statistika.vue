@@ -34,9 +34,9 @@
         <v-card rounded="xl" class="pa-5">
           <h2 class="text-subtitle-1 font-weight-bold mb-1">
             <v-icon start size="18" color="success">mdi-chart-line</v-icon>
-            Raksti pa mēnešiem (pēdējie 6)
+            Raksti šajā nedēļā
           </h2>
-          <p class="text-caption text-medium-emphasis mb-4">COUNT(*) GROUP BY mēnesis</p>
+          <p class="text-caption text-medium-emphasis mb-4">COUNT(*) GROUP BY diena</p>
           <canvas ref="lineCanvas" height="260" />
         </v-card>
       </v-col>

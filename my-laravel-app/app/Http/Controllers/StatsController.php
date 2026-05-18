@@ -27,8 +27,8 @@ class StatsController extends Controller
           ->map(fn ($k) => ['nosaukums' => $k->nosaukums, 'skaits' => $k->raksti_count, 'krasa' => $k->krasa]);
 
         $paMenešiem = Raksts::where('statuss', 'publicets')
-            ->where('publicets_datums', '>=', now()->subMonths(6))
-            ->select(DB::raw("DATE_FORMAT(publicets_datums, '%Y-%m') as menesis"), DB::raw('COUNT(*) as skaits'))
+            ->whereBetween('publicets_datums', [now()->startOfWeek(), now()->endOfWeek()])
+            ->select(DB::raw("DATE_FORMAT(publicets_datums, '%d.%m.') as menesis"), DB::raw('COUNT(*) as skaits'))
             ->groupBy('menesis')
             ->orderBy('menesis')
             ->get();
